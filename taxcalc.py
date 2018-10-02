@@ -1,11 +1,9 @@
 import csv
 import argparse
-from collections import namedtuple
 from datetime import datetime
 import os
 import logging
-
-Transaction = namedtuple('Transaction', ['date', 'amount', 'type', 'description', 'balance'])
+from dataTypes import Transaction, Account
 
 def processStatementRow(row):
     return Transaction(
@@ -34,7 +32,10 @@ import db
 
 # Open or create DB.
 companyDBFile = args.company + '.taxcalc.db'
-db.connect(companyDBFile)
+conn = db.connect(companyDBFile)
+
+account = Account(name='Cheque', bank_name='NAB');
+db.addAccount(conn, account)
 
 with open(args.statement_loc) as csvfile:
     reader = csv.DictReader(csvfile, NABTxnFieldNames)
