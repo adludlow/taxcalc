@@ -1,7 +1,9 @@
 import sqlite3
 import os
 import logging
+import hashlib
 from dataTypes import Transaction, Account
+from dbExceptions import AccountExistsException
 
 def createTables(conn):
     conn.execute('''
@@ -15,8 +17,11 @@ def createTables(conn):
     create table bank_account (
         id integer primary key autoincrement,
         name text,
-        bank_name text
+        bank_name text,
+        hash text
     )''')
+
+    conn.execute('''create unique index ba_hash_idx on bank_account(hash)''')
 
     conn.execute('''
     create table bank_txn (
@@ -34,7 +39,6 @@ def checkDB(conn):
     cur = conn.cursor()
     try:
         version = cur.execute('select * from version')
-        print(version)
         return True
     except sqlite3.OperationalError as err:
         print(err)
@@ -50,7 +54,6 @@ def connect(dbfile):
     conn = sqlite3.connect(dbfile)
     if checkDB(conn):
         logging.debug('DB Exists.')
-        pass
     else:
         logging.debug('Creating DB.')
         initialiseDatabase(conn)
@@ -58,4 +61,44 @@ def connect(dbfile):
     return conn
 
 def addAccount(conn, account):
-    conn.execute('insert into bank_account(name, bank_name) values(:name, :bank_name)', {'name': account.name, 'bank_name': account.bank_name})
+    try:
+        h = hashlib.sha256()
+        h.update(bytes(account.name + account.bank_name, encoding='utf-8'))
+        cur = conn.cursor()
+        print('adding account.')
+        cur.execute('insert into bank_account(name, bank_name, hash) values(:name, :bank_name, :hash)', {'name': account.name, 'bank_name': account.bank_name, 'hash': h.digest()})
+        account.id = cur.lastrowid
+        return account
+    except sqlite3.IntegrityError as err:
+        if str(err).startswith('UNIQUE constraint failed'):
+            raise AccountExistsException('Account exists.')
+        else:
+            raise
+
+def addBankTransaction(conn, txn):
+    cur = conn.cursor()
+    cur.execute('insert into bank_txn(date, amount, txn_type, description, balance, account_id) values(:date, :amount, :txn_type, :description, :balance, :account_id)',{
+        'date': txn.date,
+        'amount': txn.amount,
+        'txn_type': txn.type,
+        'description': txn.description,
+        'balance': txn.balance,
+        'account_id': txn.account.id
+    })
+
+    txn.id = cur.lastrowid
+    return txn
+
+def getAccounts(conn):
+    cur = conn.cursor()
+    cur.execute('select * from bank_account')
+    accounts = cur.fetchall()
+    for acc in accounts:
+        print(acc)
+
+def getTransactions(conn):
+    cur = conn.cursor()
+    cur.execute('select * from bank_txn')
+    txns = cur.fetchall()
+    for txn in txns:
+        print(txn)
