@@ -41,7 +41,6 @@ def checkDB(conn):
         version = cur.execute('select * from version')
         return True
     except sqlite3.OperationalError as err:
-        print(err)
         return False 
 
 def initialiseDatabase(conn):
@@ -65,7 +64,6 @@ def addAccount(conn, account):
         h = hashlib.sha256()
         h.update(bytes(account.name + account.bank_name, encoding='utf-8'))
         cur = conn.cursor()
-        print('adding account.')
         cur.execute('insert into bank_account(name, bank_name, hash) values(:name, :bank_name, :hash)', {'name': account.name, 'bank_name': account.bank_name, 'hash': h.digest()})
         account.id = cur.lastrowid
         return account
@@ -89,6 +87,13 @@ def addBankTransaction(conn, txn):
     txn.id = cur.lastrowid
     return txn
 
+def getAccountByName(conn, accountName):
+    cur = conn.cursor()
+    cur.execute('select * from bank_account where name = ?', (accountName,))
+    result = cur.fetchone()
+    print(result)
+    return Account(result[0], result[1], result[2])
+
 def getAccounts(conn):
     cur = conn.cursor()
     cur.execute('select * from bank_account')
@@ -96,9 +101,19 @@ def getAccounts(conn):
     for acc in accounts:
         print(acc)
 
-def getTransactions(conn):
+def getAccountTransactions(conn, accountId):
     cur = conn.cursor()
-    cur.execute('select * from bank_txn')
-    txns = cur.fetchall()
-    for txn in txns:
-        print(txn)
+    cur.execute('select * from bank_txn where account_id = ?', accountId)
+    rows = cur.fetchall()
+    txns = []
+    for txn in rows:
+        txns.append(Transaction(
+            date=datetime.strptime(row['date'], '%d %b %y'),
+            amount=row['amount'],
+            type=row['type'],
+            description=row['description'],
+            balance=row['balance']
+            ))
+    return txns
+
+    
