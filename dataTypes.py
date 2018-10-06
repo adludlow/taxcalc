@@ -1,4 +1,5 @@
 from collections import namedtuple
+from datetime import datetime
 
 class Transaction:
     def __init__(
@@ -19,6 +20,26 @@ class Transaction:
         self.balance=balance
         self.account=account
 
+    @staticmethod
+    def fromDBRow(row):
+        return Transaction(
+            date=datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S'),
+            amount=row[1],
+            type=row[2],
+            description=row[3],
+            balance=row[4]
+        )
+
+    @staticmethod
+    def fromCSVRow(row):
+        return Transaction(
+            date=datetime.strptime(row['date'], '%d %b %y'),
+            amount=row['amount'],
+            type=row['type'],
+            description=row['description'],
+            balance=row['balance']
+        )
+
 class Account:
     def __init__(
             self,
@@ -31,4 +52,10 @@ class Account:
         self.name=name
         self.bank_name=bank_name
         self.transactions=transactions
+
+    @staticmethod
+    def fromDBRow(self, row):
+        return Account(
+            id = row['id']
+        )
 

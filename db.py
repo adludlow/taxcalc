@@ -2,6 +2,7 @@ import sqlite3
 import os
 import logging
 import hashlib
+from datetime import datetime
 from dataTypes import Transaction, Account
 from dbExceptions import AccountExistsException
 
@@ -18,7 +19,8 @@ def createTables(conn):
         id integer primary key autoincrement,
         name text,
         bank_name text,
-        hash text
+        hash text,
+        created_on date
     )''')
 
     conn.execute('''create unique index ba_hash_idx on bank_account(hash)''')
@@ -32,6 +34,7 @@ def createTables(conn):
         description text,
         balance real,
         account_id integer,
+        created_on date,
         foreign key(account_id) references bank_account(id)
     )''')
 
@@ -91,8 +94,7 @@ def getAccountByName(conn, accountName):
     cur = conn.cursor()
     cur.execute('select * from bank_account where name = ?', (accountName,))
     result = cur.fetchone()
-    print(result)
-    return Account(result[0], result[1], result[2])
+    return Account.fromDBRow(result)
 
 def getAccounts(conn):
     cur = conn.cursor()
@@ -103,17 +105,11 @@ def getAccounts(conn):
 
 def getAccountTransactions(conn, accountId):
     cur = conn.cursor()
-    cur.execute('select * from bank_txn where account_id = ?', accountId)
+    cur.execute('select date, amount, txn_type, description, balance from bank_txn where account_id = ?', (accountId,))
     rows = cur.fetchall()
     txns = []
     for txn in rows:
-        txns.append(Transaction(
-            date=datetime.strptime(row['date'], '%d %b %y'),
-            amount=row['amount'],
-            type=row['type'],
-            description=row['description'],
-            balance=row['balance']
-            ))
+        txns.append(Transaction.fromDBRow(txn))
     return txns
 
     
