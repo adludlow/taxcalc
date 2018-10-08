@@ -54,8 +54,10 @@ class Account:
         self.transactions=transactions
 
     @staticmethod
-    def fromDBRow(self, row):
+    def fromDBRow(row):
         return Account(
-            id = row['id']
+            id = row['id'],
+            name = row['name'],
+            bank_name = row['bank_name']
         )
 

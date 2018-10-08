@@ -1,5 +1,6 @@
 import db
 import csv
+import logging
 from dataTypes import Transaction, Account
 
 DB_EXT = '.taxcalc.db'
@@ -11,7 +12,7 @@ def getCompanyConnection(companyName):
     return conn
 
 def addCompanyAccount(companyConn, account):
-    return Account(db.addAccount(companyConn, account))
+    return db.addAccount(companyConn, account)
 
 def processStatement(companyConn, account, statementLoc, statementFormat='csv'):
     try:
@@ -30,7 +31,12 @@ def getAccount(companyConn, accountName):
     
 def getAccountTransactions(companyConn, account):
     try:
-        rows = db.getAccountTransactions(companyConn, account.id)
-        return map(Transaction, rows)
+        return db.getAccountTransactions(companyConn, account.id)
     except Exception as err:
-        rasie
+        raise
+
+def save(companyConn):
+    try:
+        companyConn.commit()
+    except Exception as err:
+        raise

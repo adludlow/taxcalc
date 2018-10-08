@@ -26,17 +26,28 @@ def createTables(conn):
     conn.execute('''create unique index ba_hash_idx on bank_account(hash)''')
 
     conn.execute('''
+    create table txn_type (
+        id integer primary key autoincrement,
+        name text,
+        label text,
+        tax_code text,
+        gst integer check(gst = 1 or gst = 0)
+    )''')
+
+    conn.execute('''
     create table bank_txn (
         id integer primary key autoincrement,
         date date, 
         amount real,
-        txn_type text,
+        txn_type_id integer,
         description text,
         balance real,
         account_id integer,
         created_on date,
-        foreign key(account_id) references bank_account(id)
+        foreign key(account_id) references bank_account(id),
+        foreign key(txn_type_id) references txn_type(id)
     )''')
+
 
 def checkDB(conn):
     cur = conn.cursor()
@@ -78,10 +89,10 @@ def addAccount(conn, account):
 
 def addBankTransaction(conn, txn):
     cur = conn.cursor()
-    cur.execute('insert into bank_txn(date, amount, txn_type, description, balance, account_id) values(:date, :amount, :txn_type, :description, :balance, :account_id)',{
+    cur.execute('insert into bank_txn(date, amount, txn_type_id, description, balance, account_id) values(:date, :amount, :txn_type_id, :description, :balance, :account_id)',{
         'date': txn.date,
         'amount': txn.amount,
-        'txn_type': txn.type,
+        'txn_type_id': txn.type,
         'description': txn.description,
         'balance': txn.balance,
         'account_id': txn.account.id
@@ -105,11 +116,9 @@ def getAccounts(conn):
 
 def getAccountTransactions(conn, accountId):
     cur = conn.cursor()
-    cur.execute('select date, amount, txn_type, description, balance from bank_txn where account_id = ?', (accountId,))
+    cur.execute('select date, amount, txn_type_id, description, balance from bank_txn where account_id = ?', (accountId,))
     rows = cur.fetchall()
     txns = []
-    for txn in rows:
-        txns.append(Transaction.fromDBRow(txn))
-    return txns
+    return [Transaction.fromDBRow(row) for row in rows]
 
     
