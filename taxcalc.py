@@ -6,9 +6,9 @@ from dataTypes import Transaction, Account
 DB_EXT = '.taxcalc.db'
 BANK_TXN_FIELD_NAMES = ['date', 'amount', 'unk1', 'unk2', 'type', 'description', 'balance']
 
-def getCompanyConnection(companyName):
+def getCompanyConnection(companyName, datafiles = []):
     companyDBFile = companyName.replace(' ', '') + DB_EXT
-    conn = db.connect(companyDBFile)
+    conn = db.connect(companyDBFile, datafiles)
     return conn
 
 def addCompanyAccount(companyConn, account):

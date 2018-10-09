@@ -2,6 +2,7 @@ import sqlite3
 import os
 import logging
 import hashlib
+import csv
 from datetime import datetime
 from dataTypes import Transaction, Account
 from dbExceptions import AccountExistsException
@@ -48,6 +49,23 @@ def createTables(conn):
         foreign key(txn_type_id) references txn_type(id)
     )''')
 
+def loadData(conn, datafile):
+    filename = os.path.basename(datafile)
+    inserts = []
+    with open(datafile, 'r') as f:
+        if csv.Sniffer().has_header(f.read(2048)):
+            f.seek(0)
+            reader = csv.reader(f)
+            header = next(reader)
+            for row in reader:
+                row = [ f"'{r}'" for r in row ]
+                insertStatement = f"insert into {filename[:-4]}({','.join(header)}) values({','.join(row)})"
+                inserts.append(insertStatement)
+        else:
+            raise Exception('Attempted to load data file with no hedaer record.')
+
+    for i in inserts:
+        conn.execute(i)
 
 def checkDB(conn):
     cur = conn.cursor()
@@ -57,19 +75,21 @@ def checkDB(conn):
     except sqlite3.OperationalError as err:
         return False 
 
-def initialiseDatabase(conn):
+def initialiseDatabase(conn, datafiles = []):
     createTables(conn)
+    for f in datafiles:
+        loadData(conn, f)
 
     conn.commit()
     
-def connect(dbfile):
+def connect(dbfile, datafiles = []):
     logging.debug('connect')
     conn = sqlite3.connect(dbfile)
     if checkDB(conn):
         logging.debug('DB Exists.')
     else:
         logging.debug('Creating DB.')
-        initialiseDatabase(conn)
+        initialiseDatabase(conn, datafiles)
 
     return conn
 

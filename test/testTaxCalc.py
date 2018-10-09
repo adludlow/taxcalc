@@ -10,6 +10,9 @@ TEST_COMPANY = 'TEST_COMPANY'
 TEST_ACCOUNT_1 = 'Account1'
 TEST_BANK_TYPE = 'Bank1'
 TEST_STATEMENT_1_LOC ='test/test_data/test_statement_1.csv'
+TEST_INIT_DATA_FILES = [
+        'test/test_data/txn_type.csv'
+        ]
 
 class TestTaxCalc(TestCase):
 
@@ -17,7 +20,7 @@ class TestTaxCalc(TestCase):
         super().__init__(*args, **kwargs)
 
     def test_addEntities(self):
-        companyConn = taxcalc.getCompanyConnection(TEST_COMPANY)
+        companyConn = taxcalc.getCompanyConnection(TEST_COMPANY, TEST_INIT_DATA_FILES)
 
         testAccount1 = Account(name = TEST_ACCOUNT_1, bank_name = TEST_BANK_TYPE)
         testAccount1 = taxcalc.addCompanyAccount(

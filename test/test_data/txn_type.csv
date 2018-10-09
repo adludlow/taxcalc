@@ -1,0 +1,3 @@
+name, label, tax_code, gst
+wages, wages, 100, 0
+transfer to other account, transfer to other account, 101, 0
