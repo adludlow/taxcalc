@@ -1,0 +1,37 @@
+name,label,accountant_code,tax_code,txn_direction
+Fee Income,,194,GST,IN
+Interest Received,,199,ITS,IN
+Owners Capital Contributed,,50101,N-T,IN
+Sundry GST Receipts,,969,GST,IN
+Sundry Non-GST Receipts,,969,N-T,IN
+Transfers from other accounts,,969,N-T,IN
+Tax Refund,,,N-T,IN
+Accounting Fees,,300,GST,OUT
+Bank Charges,,309,FRE,OUT
+Electricity,,352,GST,OUT
+Insurance,,381,GST,OUT
+Insurance - GST Free Portion,,381,FRE,OUT
+Mobile Phone,,460,GST,OUT
+Postage,,411,GST,OUT
+Computer Software,,,GST,OUT
+Printing and Stationary,,414,GST,OUT
+Rent,,427,GST,OUT
+Repairs - Maintenance,,428,GST,OUT
+Subscriptions and Licences,,454,GST,OUT
+Sundry GST Payments,,969,GST,OUT
+Sundry GST-Free Payments,,969,FRE,OUT
+Sundry Non-GST Payments,,969,N-T,OUT
+Superannuation,,457,N-T,OUT
+Tax Office Payments,,899,N-T,OUT
+Telephone,,460,GST,OUT
+Telephone - GST-Free Portion,,460,GST,OUT
+Travel Expenses,,464,GST,OUT
+Transfers to Other Accounts,,969,N-T,OUT
+Wages and Salaries,,470,N-T,OUT
+Gas,,,GST,OUT
+Water,,,GST,OUT
+Internet,,,GST,OUT
+Computer Hardware,,,GST,OUT
+Donations,,,N-T,OUT
+Dividends,,,N-T,OUT
+
