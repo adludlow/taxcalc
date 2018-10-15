@@ -13,14 +13,21 @@ class TaxCalcCli(cmd.Cmd):
         currentCompanyConn.commit()
 
     def do_createCompany(self, companyName):
-        'Create a new company and open it: createCompany "My Company"'
+        if len(companyName) == 0:
+            print('Company Name can\'t be empty.')
+            return
 
+        'Create a new company and open it: createCompany "My Company"'
         conn = taxcalc.getCompanyConnection(companyName)
         self.companies[companyName] = conn
         self.currentCompanyConn = conn
 
     def do_addAccount(self, arg):
-        name, bankName = arg.split()
+        args = arg.split()
+        if len(args) != 2:
+            print('addAccount takes 2 arguments, Account Name and Bank Name.')
+            return
+        name, bankName = args
         account = Account(name=name, bank_name=bankName)
         taxcalc.addCompanyAccount(self.currentCompanyConn, account)
 
