@@ -7,7 +7,12 @@ class TaxCalcCli(cmd.Cmd):
     prompt = '(taxcalc) '
 
     companies = {}
+    currentCompanyName = ''
     currentCompanyConn = None
+
+    def setCurrentCompany(self, companyName):
+        self.currentCompanyName = companyName
+        self.currentCompanyConn = self.companies[companyName]
 
     def do_save(self):
         currentCompanyConn.commit()
@@ -20,7 +25,8 @@ class TaxCalcCli(cmd.Cmd):
         'Create a new company and open it: createCompany "My Company"'
         conn = taxcalc.getCompanyConnection(companyName)
         self.companies[companyName] = conn
-        self.currentCompanyConn = conn
+        self.setCurrentCompany(companyName)
+        print(f"Company {companyName} created")
 
     def do_addAccount(self, arg):
         args = arg.split()
@@ -30,15 +36,17 @@ class TaxCalcCli(cmd.Cmd):
         name, bankName = args
         account = Account(name=name, bank_name=bankName)
         taxcalc.addCompanyAccount(self.currentCompanyConn, account)
+        print(f"Account {name} added to company {self.currentCompanyName}")
 
     def do_processStatement(self, arg):
         accountName, statementFile = arg.split()
-        account = taxCalc.getAccount(self.currentCompanyConn, accountName)
-        taxCalc.processStatement(self.currentCompanyConn, account, staementFile)
+        account = taxcalc.getAccount(self.currentCompanyConn, accountName)
+        taxcalc.processStatement(self.currentCompanyConn, account, statementFile)
+        print(f"Staetment {statementFile} loaded into account {accountName}")
 
     def do_getAccountTransactions(self, accountName):
-        account = taxCalc.getAccount(self.currentCompanyConn, accountName)
-        txns = taxCalc.getAccountTransactions(self.currentCompanyConn, account)
+        account = taxcalc.getAccount(self.currentCompanyConn, accountName)
+        txns = taxcalc.getAccountTransactions(self.currentCompanyConn, account)
         
     def do_exit(self, arg):
         return True

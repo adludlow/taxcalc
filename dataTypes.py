@@ -56,8 +56,8 @@ class Account:
     @staticmethod
     def fromDBRow(row):
         return Account(
-            id = row['id'],
-            name = row['name'],
-            bank_name = row['bank_name']
+            id = row[0],
+            name = row[1],
+            bank_name = row[2]
         )
 

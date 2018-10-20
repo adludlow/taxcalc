@@ -34,5 +34,7 @@ class TestTaxCalc(TestCase):
         txns = taxcalc.getAccountTransactions(companyConn, testAccount1)
         self.assertTrue(len(txns) == 54)
 
+        account = taxcalc.getAccount(companyConn, testAccount1.name)
+
     def tearDown(self):
         remove(TEST_COMPANY + taxcalc.DB_EXT)
