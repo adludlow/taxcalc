@@ -14,13 +14,14 @@ def getCompanyConnection(companyName):
 def addCompanyAccount(companyConn, account):
     return db.addAccount(companyConn, account)
 
-def processStatement(companyConn, account, statementLoc, statementFormat='csv'):
+def processStatement(companyConn, account, statementLoc, preSave=lambda *args: None,  statementFormat='csv'):
     try:
         with open(statementLoc, 'r') as stmt:
             reader = csv.DictReader(stmt, BANK_TXN_FIELD_NAMES)
             for row in reader:
                 txn = Transaction.fromCSVRow(row)
                 txn.account = account
+                preSave(txn)
                 db.addBankTransaction(companyConn, txn)
         return companyConn
     except Exception as err:

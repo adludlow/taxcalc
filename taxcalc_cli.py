@@ -37,11 +37,17 @@ class TaxCalcCli(cmd.Cmd):
         account = Account(name=name, bank_name=bankName)
         taxcalc.addCompanyAccount(self.currentCompanyConn, account)
         print(f"Account {name} added to company {self.currentCompanyName}")
+    
+    def preTxnSave(self, txn):
+        # Match txn type
+
+        # Prompt if no match
+        return None
 
     def do_processStatement(self, arg):
         accountName, statementFile = arg.split()
         account = taxcalc.getAccount(self.currentCompanyConn, accountName)
-        taxcalc.processStatement(self.currentCompanyConn, account, statementFile)
+        taxcalc.processStatement(self.currentCompanyConn, account, statementFile, preSave=self.preTxnSave)
         print(f"Staetment {statementFile} loaded into account {accountName}")
 
     def do_getAccountTransactions(self, accountName):
