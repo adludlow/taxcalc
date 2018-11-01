@@ -19,6 +19,7 @@ class TestTaxCalc(TestCase):
     def test_addEntities(self):
         companyConn = taxcalc.getCompanyConnection(TEST_COMPANY)
 
+        transactionTypes = taxcalc.getTransactionTypes(companyConn)
         testAccount1 = Account(name = TEST_ACCOUNT_1, bank_name = TEST_BANK_TYPE)
         testAccount1 = taxcalc.addCompanyAccount(
                 companyConn, 

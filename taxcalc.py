@@ -41,3 +41,9 @@ def save(companyConn):
         companyConn.commit()
     except Exception as err:
         raise
+
+def getTransactionTypes(companyConn):
+    try:
+        return db.getTransactionTypes(companyConn)
+    except Exception as err:
+        raise

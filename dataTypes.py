@@ -40,6 +40,9 @@ class Transaction:
             balance=row['balance']
         )
 
+    def __str__(self):
+        return f"{self.date}, {self.amount}, {self.type}, {self.description}"
+
 class Account:
     def __init__(
             self,
@@ -61,3 +64,27 @@ class Account:
             bank_name = row[2]
         )
 
+class TransactionType:
+    def __init__(
+            self,
+            id=None,
+            name=None,
+            label=None,
+            tax_code=None,
+            txn_direction=None
+            ):
+        self.id = id
+        self.name=name
+        self.label=label
+        self.tax_code=tax_code
+        self.txn_direction=txn_direction
+
+    @staticmethod
+    def fromDBRow(row):
+        return TransactionType(
+            id = row[0],
+            name = row[1],
+            label = row[2],
+            tax_code = row[3],
+            txn_direction = row[4]
+            )

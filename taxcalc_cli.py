@@ -2,9 +2,18 @@ import cmd
 import taxcalc
 from dataTypes import Transaction, Account
 
-class TransactionType(cmd.Cmd):
-    intro = 'Select Transaction Type:'
-    prompt = '(txn type)'
+class TransactionTypeSelector(cmd.Cmd):
+    def __init__(self, txnTypes, txn):
+        super(TransactionTypeSelector, self).__init__()
+        self.txnTypes = txnTypes
+        self.txn = txn
+        self.txnTypeList = [f"{tt.id}: {tt.name}" for tt in self.txnTypes]
+        print(f"Select txn type for txn: {self.txn}")
+
+    prompt = '(txn type) '
+
+    def do_p(self, arg):
+        print(self.txnTypeList)
 
     def default(self, line):
         print(f"{line} selected.")
@@ -17,6 +26,7 @@ class TaxCalcCli(cmd.Cmd):
     companies = {}
     currentCompanyName = ''
     currentCompanyConn = None
+    txnTypes = []
 
     def setCurrentCompany(self, companyName):
         self.currentCompanyName = companyName
@@ -34,6 +44,7 @@ class TaxCalcCli(cmd.Cmd):
         conn = taxcalc.getCompanyConnection(companyName)
         self.companies[companyName] = conn
         self.setCurrentCompany(companyName)
+        self.txnTypes = taxcalc.getTransactionTypes(self.currentCompanyConn)
         print(f"Company {companyName} created")
 
     def do_addAccount(self, arg):
@@ -48,7 +59,7 @@ class TaxCalcCli(cmd.Cmd):
     
     def preTxnSave(self, txn):
         # Match txn type
-        TransactionType().cmdloop()
+        TransactionTypeSelector(self.txnTypes, txn).cmdloop()
 
         # Prompt if no match
         return None

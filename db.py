@@ -4,7 +4,7 @@ import logging
 import hashlib
 import csv
 from datetime import datetime
-from dataTypes import Transaction, Account
+from dataTypes import Transaction, Account, TransactionType
 from dbExceptions import AccountExistsException
 
 datafiles = [
@@ -35,6 +35,7 @@ def createTables(conn):
         accountant_code text,
         tax_code text,
         txn_direction text check(txn_direction = 'IN' or txn_direction = 'OUT'),
+        active integer check(active = 0 or active = 1),
         foreign key(tax_code) references tax_code(tax_code)
     )''')
 
@@ -156,7 +157,10 @@ def getAccountTransactions(conn, accountId):
     cur = conn.cursor()
     cur.execute('select date, amount, txn_type_id, description, balance from bank_txn where account_id = ?', (accountId,))
     rows = cur.fetchall()
-    txns = []
     return [Transaction.fromDBRow(row) for row in rows]
 
-    
+def getTransactionTypes(conn):
+    cur = conn.cursor()
+    cur.execute('select  id, name, label, tax_code, txn_direction from txn_type txn where active = 1')
+    rows = cur.fetchall()
+    return [TransactionType.fromDBRow(row) for row in rows]

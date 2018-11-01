@@ -1,37 +1,37 @@
-name,label,accountant_code,tax_code,txn_direction
-Fee Income,,194,GST,IN
-Interest Received,,199,ITS,IN
-Owners Capital Contributed,,50101,N-T,IN
-Sundry GST Receipts,,969,GST,IN
-Sundry Non-GST Receipts,,969,N-T,IN
-Transfers from other accounts,,969,N-T,IN
-Tax Refund,,,N-T,IN
-Accounting Fees,,300,GST,OUT
-Bank Charges,,309,FRE,OUT
-Electricity,,352,GST,OUT
-Insurance,,381,GST,OUT
-Insurance - GST Free Portion,,381,FRE,OUT
-Mobile Phone,,460,GST,OUT
-Postage,,411,GST,OUT
-Computer Software,,,GST,OUT
-Printing and Stationary,,414,GST,OUT
-Rent,,427,GST,OUT
-Repairs - Maintenance,,428,GST,OUT
-Subscriptions and Licences,,454,GST,OUT
-Sundry GST Payments,,969,GST,OUT
-Sundry GST-Free Payments,,969,FRE,OUT
-Sundry Non-GST Payments,,969,N-T,OUT
-Superannuation,,457,N-T,OUT
-Tax Office Payments,,899,N-T,OUT
-Telephone,,460,GST,OUT
-Telephone - GST-Free Portion,,460,GST,OUT
-Travel Expenses,,464,GST,OUT
-Transfers to Other Accounts,,969,N-T,OUT
-Wages and Salaries,,470,N-T,OUT
-Gas,,,GST,OUT
-Water,,,GST,OUT
-Internet,,,GST,OUT
-Computer Hardware,,,GST,OUT
-Donations,,,N-T,OUT
-Dividends,,,N-T,OUT
+name,label,accountant_code,tax_code,txn_direction,active
+Fee Income,,194,GST,IN,1
+Interest Received,,199,ITS,IN,1
+Owners Capital Contributed,,50101,N-T,IN,1
+Sundry GST Receipts,,969,GST,IN,1
+Sundry Non-GST Receipts,,969,N-T,IN,1
+Transfers from other accounts,,969,N-T,IN,1
+Tax Refund,,,N-T,IN,1
+Accounting Fees,,300,GST,OUT,1
+Bank Charges,,309,FRE,OUT,1
+Electricity,,352,GST,OUT,1
+Insurance,,381,GST,OUT,1
+Insurance - GST Free Portion,,381,FRE,OUT,1
+Mobile Phone,,460,GST,OUT,1
+Postage,,411,GST,OUT,1
+Computer Software,,,GST,OUT,1
+Printing and Stationary,,414,GST,OUT,1
+Rent,,427,GST,OUT,1
+Repairs - Maintenance,,428,GST,OUT,1
+Subscriptions and Licences,,454,GST,OUT,1
+Sundry GST Payments,,969,GST,OUT,1
+Sundry GST-Free Payments,,969,FRE,OUT,1
+Sundry Non-GST Payments,,969,N-T,OUT,1
+Superannuation,,457,N-T,OUT,1
+Tax Office Payments,,899,N-T,OUT,1
+Telephone,,460,GST,OUT,1
+Telephone - GST-Free Portion,,460,GST,OUT,1
+Travel Expenses,,464,GST,OUT,1
+Transfers to Other Accounts,,969,N-T,OUT,1
+Wages and Salaries,,470,N-T,OUT,1
+Gas,,,GST,OUT,1
+Water,,,GST,OUT,1
+Internet,,,GST,OUT,1
+Computer Hardware,,,GST,OUT,1
+Donations,,,N-T,OUT,1
+Dividends,,,N-T,OUT,1
 
