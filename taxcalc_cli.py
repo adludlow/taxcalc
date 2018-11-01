@@ -2,6 +2,14 @@ import cmd
 import taxcalc
 from dataTypes import Transaction, Account
 
+class TransactionType(cmd.Cmd):
+    intro = 'Select Transaction Type:'
+    prompt = '(txn type)'
+
+    def default(self, line):
+        print(f"{line} selected.")
+        return True
+
 class TaxCalcCli(cmd.Cmd):
     intro = 'Tax Calc - import bank statements and generate reports.'
     prompt = '(taxcalc) '
@@ -40,6 +48,7 @@ class TaxCalcCli(cmd.Cmd):
     
     def preTxnSave(self, txn):
         # Match txn type
+        TransactionType().cmdloop()
 
         # Prompt if no match
         return None
@@ -48,7 +57,7 @@ class TaxCalcCli(cmd.Cmd):
         accountName, statementFile = arg.split()
         account = taxcalc.getAccount(self.currentCompanyConn, accountName)
         taxcalc.processStatement(self.currentCompanyConn, account, statementFile, preSave=self.preTxnSave)
-        print(f"Staetment {statementFile} loaded into account {accountName}")
+        print(f"Statement {statementFile} loaded into account {accountName}")
 
     def do_getAccountTransactions(self, accountName):
         account = taxcalc.getAccount(self.currentCompanyConn, accountName)
