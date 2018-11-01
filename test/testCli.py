@@ -20,6 +20,9 @@ class TestCli(TestCase):
         cli.onecmd(f"createCompany {TEST_COMPANY}")
         self.assertEqual(cli.currentCompanyName, TEST_COMPANY)
 
-        cli.onecmd(f"addAccount {TEST_ACCOUNT_1} {TEST_BANK_1}")
+        result = cli.onecmd(f"addAccount {TEST_ACCOUNT_1} {TEST_BANK_1}")
 
-        cli.onecmd(f"processStatement {TEST_ACCOUNT_1} {TEST_STATEMENT_1}")
+        txnTypeCli = cli.onecmd(f"processStatement {TEST_ACCOUNT_1} {TEST_STATEMENT_1}")
+
+        print(txnTypeCli)
+
