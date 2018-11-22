@@ -24,5 +24,3 @@ class TestCli(TestCase):
 
         txnTypeCli = cli.onecmd(f"processStatement {TEST_ACCOUNT_1} {TEST_STATEMENT_1}")
 
-        print(txnTypeCli)
-

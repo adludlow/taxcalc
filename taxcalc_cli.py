@@ -20,13 +20,19 @@ class TransactionTypeSelector(cmd.Cmd):
         return True
 
     def default(self, arg):
-        print(arg)
-        typeId = arg.args
+        if len(arg.argv) != 1 or len(arg.argv[0]) == 0:
+            print('A Transaction Type id must be entered.')
+            return
+
+        typeId = arg.argv[0]
+        print(typeId)
         if typeId in self.txnTypeMap:
-            print(f"{typeId} selected.")
-            return self.txnTypeMap[typeId]
+            # Insert txn into db
+            # Save match
+            return True
+
         print(f"Transaction type {typeId} does not exist.")
-        return
+        return True
 
 class TaxCalcCli(cmd.Cmd):
     intro = 'Tax Calc - import bank statements and generate reports.'
@@ -70,10 +76,17 @@ class TaxCalcCli(cmd.Cmd):
     
     def preTxnSave(self, txn):
         # Match txn type
-        TransactionTypeSelector(self.txnTypes, txn).cmdloop()
 
         # Prompt if no match
-        return None
+        #txnTypePicker = TransactionTypeSelector(self.txnTypes, txn)
+        #txnTypePicker.cmdloop()
+        resp = input('(Txn Type) ')
+
+        # implement:
+        # - print txn types
+        # - check if valid txn type
+        # - save choice??
+        return txn
 
     def do_processStatement(self, arg):
         if len(arg.argv) != 3:

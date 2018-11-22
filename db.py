@@ -161,6 +161,6 @@ def getAccountTransactions(conn, accountId):
 
 def getTransactionTypes(conn):
     cur = conn.cursor()
-    cur.execute('select  id, name, label, tax_code, txn_direction from txn_type txn where active = 1')
+    cur.execute('select  id, name, label, tax_code, txn_direction from txn_type where active = 1')
     rows = cur.fetchall()
     return [TransactionType.fromDBRow(row) for row in rows]
