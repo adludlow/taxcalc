@@ -42,6 +42,8 @@ class TaxCalcCli(cmd.Cmd):
     currentCompanyName = ''
     currentCompanyConn = None
     txnTypes = []
+    txnTypeList = []
+    txnTypeMap = {}
 
     def setCurrentCompany(self, companyName):
         self.currentCompanyName = companyName
@@ -62,6 +64,8 @@ class TaxCalcCli(cmd.Cmd):
         self.companies[companyName] = conn
         self.setCurrentCompany(companyName)
         self.txnTypes = taxcalc.getTransactionTypes(self.currentCompanyConn)
+        self.txnTypeList = [f"{int(tt.id)}: {tt.name}" for tt in self.txnTypes]
+        self.txnTypeMap = {int(t.id): t for t in self.txnTypes}
         print(f"Company {companyName} created")
 
     def do_addAccount(self, arg):
@@ -75,18 +79,20 @@ class TaxCalcCli(cmd.Cmd):
         print(f"Account {name} added to company {self.currentCompanyName}")
     
     def preTxnSave(self, txn):
-        # Match txn type
-
-        # Prompt if no match
-        #txnTypePicker = TransactionTypeSelector(self.txnTypes, txn)
-        #txnTypePicker.cmdloop()
-        resp = input('(Txn Type) ')
-
-        # implement:
-        # - print txn types
-        # - check if valid txn type
-        # - save choice??
-        return txn
+        loop = True
+        while loop:
+            print(f"Enter Transaction Type for transaction: {txn}")
+            resp = input('(Txn Type) ')
+            if resp == 'p':
+                print(self.txnTypeMap)
+            else:
+                #try:
+                    txnId = int(resp)
+                    txn.type = self.txnTypeMap[txnId]
+                    return txn
+                #except Exception as err:
+                #    print(err)
+                #    print("Enter a valid Transaction Type Id or enter 'p' to print Transaction Types.")
 
     def do_processStatement(self, arg):
         if len(arg.argv) != 3:

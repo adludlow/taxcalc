@@ -21,7 +21,7 @@ def processStatement(companyConn, account, statementLoc, preSave=lambda *args: N
             for row in reader:
                 txn = Transaction.fromCSVRow(row)
                 txn.account = account
-                preSave(txn)
+                txn = preSave(txn)
                 db.addBankTransaction(companyConn, txn)
         return companyConn
     except Exception as err:
