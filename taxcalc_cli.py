@@ -1,6 +1,7 @@
 import cmd2 as cmd
 import taxcalc
 from dataTypes import Transaction, Account
+from tabulate import tabulate
 
 class TransactionTypeSelector(cmd.Cmd):
     def __init__(self, txnTypes, txn):
@@ -66,6 +67,12 @@ class TaxCalcCli(cmd.Cmd):
         self.txnTypes = taxcalc.getTransactionTypes(self.currentCompanyConn)
         self.txnTypeList = [f"{int(tt.id)}: {tt.name}" for tt in self.txnTypes]
         self.txnTypeMap = {int(t.id): t for t in self.txnTypes}
+        self.printableTxnTypeMap = {
+                'id': [ int(t.id) for t in self.txnTypes ],
+                'type': [ t.name for t in self.txnTypes ],
+                'txn_direction': [ t.txn_direction for t in self.txnTypes ],
+                'tax_code': [ t.tax_code for t in self.txnTypes ]
+                }
         print(f"Company {companyName} created")
 
     def do_addAccount(self, arg):
@@ -78,21 +85,20 @@ class TaxCalcCli(cmd.Cmd):
         taxcalc.addCompanyAccount(self.currentCompanyConn, account)
         print(f"Account {name} added to company {self.currentCompanyName}")
     
+    def printTxnTypeMap(self, txnTypeMap):
+        print(tabulate(self.printableTxnTypeMap, headers='keys'));
+        
     def preTxnSave(self, txn):
         loop = True
         while loop:
             print(f"Enter Transaction Type for transaction: {txn}")
             resp = input('(Txn Type) ')
             if resp == 'p':
-                print(self.txnTypeMap)
+                self.printTxnTypeMap(self.txnTypeMap)
             else:
-                #try:
-                    txnId = int(resp)
-                    txn.type = self.txnTypeMap[txnId]
-                    return txn
-                #except Exception as err:
-                #    print(err)
-                #    print("Enter a valid Transaction Type Id or enter 'p' to print Transaction Types.")
+                txnId = int(resp)
+                txn.type = self.txnTypeMap[txnId]
+                return txn
 
     def do_processStatement(self, arg):
         if len(arg.argv) != 3:

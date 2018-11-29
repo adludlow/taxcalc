@@ -131,7 +131,7 @@ def addBankTransaction(conn, txn):
     cur.execute('insert into bank_txn(date, amount, txn_type_id, description, balance, account_id) values(:date, :amount, :txn_type_id, :description, :balance, :account_id)',{
         'date': txn.date,
         'amount': txn.amount,
-        'txn_type_id': txn.type,
+        'txn_type_id': txn.type.id,
         'description': txn.description,
         'balance': txn.balance,
         'account_id': txn.account.id
